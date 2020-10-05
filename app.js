@@ -41,13 +41,13 @@ const removeAllEndpoint = (req, res) => {
   res.send(200, published_nodes);
 }
 
-const getOpcnodes = (req, res) =>{
+const getOpcnodes = (req, res) => {
   let endPoint = published_nodes.find(el => el.EndpointUrl === req.payload.EndpointUrl);
   res.send(200, endPoint.OpcNodes)
 }
 
-const addOpcnode = (req, res) =>{
-  let index = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
+const addOpcnode = (req, res) => {
+  let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
   let OpcNodes = published_nodes[index].OpcNodes;
   published_nodes.splice(index)
   OpcNodes.push(req.payload.OpcNode)
@@ -55,9 +55,27 @@ const addOpcnode = (req, res) =>{
   res.send(200, endPoint.OpcNodes)
 }
 
-const removeOpcnode = (req, res) =>{
-  let endPoint = published_nodes.find(el => el.EndpointUrl === req.payload.EndpointUrl);
-  res.send(200, endPoint.OpcNodes)
+const removeOpcnode = (req, res) => {
+  let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
+  if (idx == -1) {
+    //return error 404
+    res.send(404, 'EndpointUrl not found')
+  } else {
+    let pn = published_nodes[idx];
+    console.log(pn)
+    published_nodes.splice(idx);
+    let opcnodes = pn.Opcnodes;
+    console.log(opcnodes)
+    let xdi = opcnodes.findIndex(el => el.Opcnode === req.payload.Opcnode);
+    if (xdi == -1) {
+      res.send(404, 'Opcnode not found')
+    } else {
+      opcnodes.splice(xdi);
+      pn.Opcnodes = oppcnodes;
+      jf.writeFileAsync(file, pn)
+      res.send(200, 'Opcnode removed')
+    }
+  }
 }
 
 Client.fromEnvironment(Transport, function (err, client) {
@@ -83,8 +101,6 @@ Client.fromEnvironment(Transport, function (err, client) {
         client.onMethod('getOpcnodes', getOpcnodes);
         client.onMethod('addOpcnode', addOpcnode);
         client.onMethod('removeOpcnode', removeOpcnode);
-
-
       }
     });
   }
