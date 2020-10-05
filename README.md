@@ -1,6 +1,6 @@
 # Published Nodes API APP
 
-This repo contains a node.js very simple application that add APIs that allow you to manage the Azure IOT EDGE OPC UA Publisher modules by manipulating the publishedNodes.json file.
+This repo contains a very simple node.js application that add APIs that allow you to manage the Azure IOT EDGE OPC UA Publisher modules by manipulating the publishedNodes.json file.
 It creates a number of DMs that can be called from IoT Hub. These methids are (self-explanatory):  
 - getEndpoint
 - addEndpoint:Endpoint
