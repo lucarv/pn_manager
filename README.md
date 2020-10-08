@@ -4,10 +4,10 @@ This repo contains a very simple node.js application that add APIs that allow yo
 It creates a number of DMs that can be called from IoT Hub. These methids are (self-explanatory):  
 
 - getEndpoints
-- addEndpoint:Endpoint
-- removeEndpoint:Endpoint
+- addEndpoint:EndpointUrl
+- removeEndpoint:EndpointUrl
 - removeAllEndpoint
-- getOpcnodes:Endpoint
+- getOpcnodes:EndpointUrl
 - addOpcnode:Opcnode
 - removeOpcnode:Opcnode
 

@@ -20,7 +20,7 @@ var Message = require('azure-iot-device').Message;
 const getEndpoints = (req, res) => {
   let Endpoints = [];
   for (var i = 0; i < published_nodes.length; i++) {
-    Endpoint.push(published_nodes[i].EndpointUrl)
+    Endpoints.push(published_nodes[i].EndpointUrl)
   }
   res.send(200, Endpoints);
 }
