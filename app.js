@@ -17,12 +17,12 @@ var Transport = require('azure-iot-device-mqtt').Mqtt;
 var Client = require('azure-iot-device').ModuleClient;
 var Message = require('azure-iot-device').Message;
 
-const getEndpoint = (req, res) => {
-  let Endpoint = [];
+const getEndpoints = (req, res) => {
+  let Endpoints = [];
   for (var i = 0; i < published_nodes.length; i++) {
     Endpoint.push(published_nodes[i].EndpointUrl)
   }
-  res.send(200, Endpoint);
+  res.send(200, Endpoints);
 }
 
 const addEndpoint = (req, res) => {
@@ -94,7 +94,7 @@ Client.fromEnvironment(Transport, function (err, client) {
         console.log('IoT Hub module client initialized');
 
         // Act on direct messages to the module.
-        client.onMethod('getEndpoint', getEndpoint);
+        client.onMethod('getEndpoints', getEndpoints);
         client.onMethod('addEndpoint', addEndpoint);
         client.onMethod('removeEndpoint', removeEndpoint);
         client.onMethod('removeAllEndpoint', removeAllEndpoint);
