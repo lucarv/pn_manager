@@ -37,4 +37,6 @@ OpcNode:
 NodeId: "ns=1;s=thisvar"
 ```
 
-TODO: add API for User Security Management
+TODO: 
+1. Add API for User Security Management
+2. Currently there is no way to add a new Endpoint directly, instead on should first add the EndpointUrl and subsequently the OpcNodes

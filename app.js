@@ -28,19 +28,34 @@ const getEndpoints = (req, res) => {
 }
 
 const addEndpoint = (req, res) => {
-  console.log(req.payload.Endpoint)
-  res.send(200, published_nodes);
+  if (!req.payload.hasOwnProperty('EndpointUrl')) {
+    res.send(400, 'missing parameter EndpointUrl in API call')
+  } else {
+    published_nodes.push({"EndpointUrl": req.payload.Endpoint, "UserSecurity": false});
+    jf.writeFileSync(file, published_nodes)
+    res.send(200, published_nodes);
+  }
 }
 
 const removeEndpoint = (req, res) => {
-  console.log(req.payload.EndpointUrl)
-  res.send(200, published_nodes);
+  if (!req.payload.hasOwnProperty('EndpointUrl')) {
+    res.send(400, 'missing parameter EndpointUrl in API call')
+  } else {
+    let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
+    if (idx > -1) {
+      published_nodes.splice(idx);
+      jf.writeFileSync(file, published_nodes)
+      res.send(200, 'ok')
+    } else {
+      res.send(400, 'unknown EndpointUrl')
+    }
+  }
 }
 
 const removeAllEndpoint = (req, res) => {
   published_nodes = [];
-  jf.writeFileAsync(file, published_nodes)
-  res.send(200, published_nodes);
+  jf.writeFileSync(file, published_nodes)
+  res.send(200, 'ok');
 }
 
 const getOpcNodes = (req, res) => {
@@ -77,14 +92,11 @@ const removeOpcNode = (req, res) => {
       res.send(400, 'EndpointUrl not found');
     } else {
       let pn = published_nodes[idx];
-      console.log("PN: " + JSON.stringify(pn))
       let opcNodes = [];
       for (var i = 0; i < pn.OpcNodes.length; i++) {
-        opcNodes.push(pn.OpcNodes[i].id)
+        opcNodes.push(pn.OpcNodes[i].Id)
       }
-      console.log("OpcNodes: " + JSON.stringify(opcNodes));
-
-      let xdi = opcNodes.findIndex(el => el.id === req.payload.NodeId);
+      let xdi = opcNodes.indexOf(req.payload.NodeId);
       if (xdi == -1) {
         res.send(404, 'Node Id not found')
       } else {
@@ -97,7 +109,6 @@ const removeOpcNode = (req, res) => {
       }
     }
   }
-
 }
 
 Client.fromEnvironment(Transport, function (err, client) {
