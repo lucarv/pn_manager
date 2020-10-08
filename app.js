@@ -1,8 +1,7 @@
 'use strict';
 const jf = require('jsonfile');
 var published_nodes = [];
-var newEndpoint = {};
-var newTags = [];
+var Endpoints = [];
 
 var file = '/appdata/pn.json';
 jf.readFile(file, function (err, pn) {
@@ -18,7 +17,7 @@ var Client = require('azure-iot-device').ModuleClient;
 var Message = require('azure-iot-device').Message;
 
 const getEndpoints = (req, res) => {
-  let Endpoints = [];
+  Endpoints = [];
   for (var i = 0; i < published_nodes.length; i++) {
     Endpoints.push(published_nodes[i].EndpointUrl)
   }
@@ -26,12 +25,12 @@ const getEndpoints = (req, res) => {
 }
 
 const addEndpoint = (req, res) => {
-  console.log(req.payload)
+  console.log(req.payload.Endpoint)
   res.send(200, published_nodes);
 }
 
 const removeEndpoint = (req, res) => {
-  console.log(req.payload)
+  console.log(req.payload.EndpointUrl)
   res.send(200, published_nodes);
 }
 
@@ -42,17 +41,33 @@ const removeAllEndpoint = (req, res) => {
 }
 
 const getOpcnodes = (req, res) => {
-  let endPoint = published_nodes.find(el => el.EndpointUrl === req.payload.EndpointUrl);
-  res.send(200, endPoint.OpcNodes)
+  let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
+  if (idx > -1) {
+    let endPoint = published_nodes[idx];
+    res.send(200, endPoint.OpcNodes)
+  } else {
+    res.send(400, 'unknown EndpointUrl')
+  }
 }
 
 const addOpcnode = (req, res) => {
   let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
-  let OpcNodes = published_nodes[index].OpcNodes;
-  published_nodes.splice(index)
-  OpcNodes.push(req.payload.OpcNode)
-  jf.writeFileAsync(file, published_nodes)
-  res.send(200, endPoint.OpcNodes)
+  if (idx > -1) {
+    let pn = published_nodes[idx];
+    console.log(JSON.stringify(published_nodes))
+    published_nodes.splice(idx)
+    console.log(JSON.stringify(published_nodes))
+    pn.OpcNodes.push(req.payload.OpcNode)
+    console.log(JSON.stringify(pn))
+    published_nodes.push(pn)
+    console.log(JSON.stringify(published_nodes))
+    jf.writeFileSync(file, published_nodes)
+    res.send(200, 'ok')
+  } else {
+    console.log(req.payload.EndpointUrl);
+    console.log(Endpoints)
+    res.send(400, 'unknown EndpointUrl')
+  }
 }
 
 const removeOpcnode = (req, res) => {

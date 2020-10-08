@@ -5,11 +5,11 @@ It creates a number of DMs that can be called from IoT Hub. These methids are (s
 
 - getEndpoints
 - addEndpoint:Endpoint
-- removeEndpoint:Endpoint
+- removeEndpoint:EndpointUrl
 - removeAllEndpoint
 - getOpcnodes:EndpointUrl
-- addOpcnode:Opcnode
-- removeOpcnode:Opcnode
+- addOpcnode:EndpointUrl, Opcnode
+- removeOpcnode:EndpointUrl, Opcnode
 
 Parameter format:  
 ```
