@@ -7,9 +7,9 @@ It creates a number of DMs that can be called from IoT Hub. These methids are (s
 - addEndpoint:Endpoint
 - removeEndpoint:EndpointUrl
 - removeAllEndpoint
-- getOpcnodes:EndpointUrl
-- addOpcnode:EndpointUrl, Opcnode
-- removeOpcnode:EndpointUrl, Opcnode
+- getOpcNodes:EndpointUrl
+- addOpcNode:EndpointUrl, OpcNode
+- removeOpcNode:EndpointUrl, OpcNode
 
 Parameter format:  
 ```
@@ -27,7 +27,7 @@ Endpoint:
       }
     ]
 }
-Opcnode:  
+OpcNode:  
 {
     "Id": "ns=1;s=thisvar",
     "OpcSamplingInterval": 2000,

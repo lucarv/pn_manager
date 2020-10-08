@@ -43,7 +43,7 @@ const removeAllEndpoint = (req, res) => {
   res.send(200, published_nodes);
 }
 
-const getOpcnodes = (req, res) => {
+const getOpcNodes = (req, res) => {
   let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
   if (idx > -1) {
     let endPoint = published_nodes[idx];
@@ -53,12 +53,12 @@ const getOpcnodes = (req, res) => {
   }
 }
 
-const addOpcnode = (req, res) => {
+const addOpcNode = (req, res) => {
   let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
   if (idx > -1) {
     let pn = published_nodes[idx];
     published_nodes.splice(idx)
-    pn.OpcNodes.push(req.payload.Opcnode)
+    pn.OpcNodes.push(req.payload.OpcNode)
     published_nodes.push(pn)
     jf.writeFileSync(file, published_nodes)
     res.send(200, 'ok')
@@ -67,8 +67,8 @@ const addOpcnode = (req, res) => {
   }
 }
 
-const removeOpcnode = (req, res) => {
-  if (!req.payload.hasOwnPropert('EndpointUrl') || !req.payload.hasOwnPropert('NodeId')) {
+const removeOpcNode = (req, res) => {
+  if (!req.payload.hasOwnProperty('EndpointUrl') || !req.payload.hasOwnProperty('NodeId')) {
     res.send(400, 'missing parameter in API call')
   } else {
     let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
@@ -77,20 +77,20 @@ const removeOpcnode = (req, res) => {
       res.send(400, 'EndpointUrl not found');
     } else {
       let pn = published_nodes[idx];
-      published_nodes.splice(idx);
-      let opcnodes = [];
-      for (var i = 0; i < pn.Opcnodes.length; i++) {
-        opcnodes.push(pn.Opcnodes[i].id)
+      console.log("PN: " + JSON.stringify(pn))
+      let opcNodes = [];
+      for (var i = 0; i < pn.OpcNodes.length; i++) {
+        opcNodes.push(pn.OpcNodes[i].id)
       }
-      console.log(opcnodes);
-      
-      let xdi = opcnodes.findIndex(el => el.id === req.payload.NodeId);
+      console.log("OpcNodes: " + JSON.stringify(opcNodes));
+
+      let xdi = opcNodes.findIndex(el => el.id === req.payload.NodeId);
       if (xdi == -1) {
         res.send(404, 'Node Id not found')
       } else {
         published_nodes.splice(idx)
-        opcnodes.splice(xdi);
-        pn.Opcnodes = opcnodes;
+        opcNodes.splice(xdi);
+        pn.OpcNodes = opcNodes;
         published_nodes.push(pn)
         jf.writeFileSync(file, published_nodes)
         res.send(200, 'ok')
@@ -120,9 +120,9 @@ Client.fromEnvironment(Transport, function (err, client) {
         client.onMethod('addEndpoint', addEndpoint);
         client.onMethod('removeEndpoint', removeEndpoint);
         client.onMethod('removeAllEndpoint', removeAllEndpoint);
-        client.onMethod('getOpcnodes', getOpcnodes);
-        client.onMethod('addOpcnode', addOpcnode);
-        client.onMethod('removeOpcnode', removeOpcnode);
+        client.onMethod('getOpcNodes', getOpcNodes);
+        client.onMethod('addOpcNode', addOpcNode);
+        client.onMethod('removeOpcNode', removeOpcNode);
       }
     });
   }
