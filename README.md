@@ -4,14 +4,35 @@ This repo contains a very simple node.js application that add APIs that allow yo
 It creates a number of DMs that can be called from IoT Hub. These methids are (self-explanatory):  
 
 - getEndpoints
-- addEndpoint:EndpointUrl
-- removeEndpoint:EndpointUrl
+- addEndpoint:Endpoint
+- removeEndpoint:Endpoint
 - removeAllEndpoint
 - getOpcnodes:EndpointUrl
 - addOpcnode:Opcnode
 - removeOpcnode:Opcnode
 
 Parameter format:  
+```
+EndpointUrl: "opc.tcp://192.168.1.12:48000/lucaPLC"
+Endpoint:  
+{
+    "EndpointUrl": "opc.tcp://myOpcUaServer:myPort/myResource",
+    "UseSecurity": false,
+    "OpcNodes": [
+      {
+        "Id": "ns=1;s=thisvar",
+        "OpcSamplingInterval": 2000,
+        "OpcPublishingInterval": 5000,
+        "DisplayName": "This Var"
+      }
+    ]
+  }
+  Opcnode:  
+  {
+      "Id": "ns=1;s=thisvar", 
+      "OpcSamplingInterval": 2000, 
+      "OpcPublishingInterval": 5000, 
+      "DisplayName": "This Var"}
+  ```
 
-- Endpoint: "opc.tcp://192.168.1.12:48000/lucaPLC"
-- Opcnode:  {"Id": "ns=1;s=temperature", "OpcSamplingInterval": 2000, "OpcPublishingInterval": 5000, "DisplayName": "Temperature"}
+  TODO: add API for User Security Management
