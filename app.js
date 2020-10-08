@@ -31,7 +31,12 @@ const addEndpoint = (req, res) => {
   if (!req.payload.hasOwnProperty('EndpointUrl')) {
     res.send(400, 'missing parameter EndpointUrl in API call')
   } else {
-    published_nodes.push({"EndpointUrl": req.payload.Endpoint, "UserSecurity": false});
+    let newEp = {
+      "EndpointUrl": req.payload.EndpointUrl,
+      "UserSecurity": false
+    }
+    console.log(newEp)
+    published_nodes.push(newEp);
     jf.writeFileSync(file, published_nodes)
     res.send(200, 'ok');
   }
