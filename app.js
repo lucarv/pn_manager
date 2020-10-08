@@ -33,7 +33,7 @@ const addEndpoint = (req, res) => {
   } else {
     published_nodes.push({"EndpointUrl": req.payload.Endpoint, "UserSecurity": false});
     jf.writeFileSync(file, published_nodes)
-    res.send(200, published_nodes);
+    res.send(200, 'ok');
   }
 }
 
