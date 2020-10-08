@@ -8,6 +8,9 @@ jf.readFile(file, function (err, pn) {
   if (err) console.error(err);
   else {
     published_nodes = pn;
+    for (var i = 0; i < published_nodes.length; i++) {
+      Endpoints.push(published_nodes[i].EndpointUrl)
+    }
     console.log(`currently with ${published_nodes.length} Endpoint configured`)
   }
 });
@@ -54,18 +57,12 @@ const addOpcnode = (req, res) => {
   let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
   if (idx > -1) {
     let pn = published_nodes[idx];
-    console.log(JSON.stringify(published_nodes))
     published_nodes.splice(idx)
-    console.log(JSON.stringify(published_nodes))
-    pn.OpcNodes.push(req.payload.OpcNode)
-    console.log(JSON.stringify(pn))
+    pn.OpcNodes.push(req.payload.Opcnode)
     published_nodes.push(pn)
-    console.log(JSON.stringify(published_nodes))
     jf.writeFileSync(file, published_nodes)
     res.send(200, 'ok')
   } else {
-    console.log(req.payload.EndpointUrl);
-    console.log(Endpoints)
     res.send(400, 'unknown EndpointUrl')
   }
 }
@@ -73,22 +70,22 @@ const addOpcnode = (req, res) => {
 const removeOpcnode = (req, res) => {
   let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
   if (idx == -1) {
-    //return error 404
-    res.send(404, 'EndpointUrl not found')
+    //return error 400
+    res.send(400, 'EndpointUrl not found')
   } else {
     let pn = published_nodes[idx];
     console.log(pn)
     published_nodes.splice(idx);
-    let opcnodes = pn.Opcnodes;
-    console.log(opcnodes)
-    let xdi = opcnodes.findIndex(el => el.Opcnode === req.payload.Opcnode);
+    console.log(pn.Opcnodes)
+    let xdi = pn.Opcnodes.findIndex(el => el.Opcnode === req.payload.Opcnode);
     if (xdi == -1) {
       res.send(404, 'Opcnode not found')
     } else {
-      opcnodes.splice(xdi);
-      pn.Opcnodes = oppcnodes;
-      jf.writeFileAsync(file, pn)
-      res.send(200, 'Opcnode removed')
+      published_nodes.splice(idx)
+      pn.opcnodes.splice(xdi);
+      published_nodes.push(pn)
+      jf.writeFileSync(file, pn)
+      res.send(200, 'ok')
     }
   }
 }
