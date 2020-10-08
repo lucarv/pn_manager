@@ -26,13 +26,15 @@ Endpoint:
         "DisplayName": "This Var"
       }
     ]
-  }
-  Opcnode:  
-  {
-      "Id": "ns=1;s=thisvar", 
-      "OpcSamplingInterval": 2000, 
-      "OpcPublishingInterval": 5000, 
-      "DisplayName": "This Var"}
-  ```
+}
+Opcnode:  
+{
+    "Id": "ns=1;s=thisvar",
+    "OpcSamplingInterval": 2000,
+    "OpcPublishingInterval": 5000,
+    "DisplayName": "This Var"
+}
+NodeId: "ns=1;s=thisvar"
+```
 
-  TODO: add API for User Security Management
+TODO: add API for User Security Management

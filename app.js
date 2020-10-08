@@ -68,26 +68,36 @@ const addOpcnode = (req, res) => {
 }
 
 const removeOpcnode = (req, res) => {
-  let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
-  if (idx == -1) {
-    //return error 400
-    res.send(400, 'EndpointUrl not found')
+  if (!req.payload.hasOwnPropert('EndpointUrl') || !req.payload.hasOwnPropert('NodeId')) {
+    res.send(400, 'missing parameter in API call')
   } else {
-    let pn = published_nodes[idx];
-    console.log(pn)
-    published_nodes.splice(idx);
-    console.log(pn.Opcnodes)
-    let xdi = pn.Opcnodes.findIndex(el => el.Opcnode === req.payload.Opcnode);
-    if (xdi == -1) {
-      res.send(404, 'Opcnode not found')
+    let idx = published_nodes.findIndex(el => el.EndpointUrl === req.payload.EndpointUrl)
+    if (idx == -1) {
+      //return error 400
+      res.send(400, 'EndpointUrl not found');
     } else {
-      published_nodes.splice(idx)
-      pn.opcnodes.splice(xdi);
-      published_nodes.push(pn)
-      jf.writeFileSync(file, pn)
-      res.send(200, 'ok')
+      let pn = published_nodes[idx];
+      published_nodes.splice(idx);
+      let opcnodes = [];
+      for (var i = 0; i < pn.Opcnodes.length; i++) {
+        opcnodes.push(pn.Opcnodes[i].id)
+      }
+      console.log(opcnodes);
+      
+      let xdi = opcnodes.findIndex(el => el.id === req.payload.NodeId);
+      if (xdi == -1) {
+        res.send(404, 'Node Id not found')
+      } else {
+        published_nodes.splice(idx)
+        opcnodes.splice(xdi);
+        pn.Opcnodes = opcnodes;
+        published_nodes.push(pn)
+        jf.writeFileSync(file, published_nodes)
+        res.send(200, 'ok')
+      }
     }
   }
+
 }
 
 Client.fromEnvironment(Transport, function (err, client) {
